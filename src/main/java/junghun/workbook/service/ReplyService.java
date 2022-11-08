@@ -6,7 +6,7 @@ import junghun.workbook.dto.ReplyDTO;
 import junghun.workbook.entity.Reply;
 
 public interface ReplyService {
-    long register(ReplyDTO replyDTO);
+    Long register(ReplyDTO replyDTO);
 
     ReplyDTO read(Long rno);
 

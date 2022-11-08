@@ -19,14 +19,15 @@ Rest 컨트롤러는 대부분 ajax와 같이 눈에 보이지 않는 형식으�
 이런 이유로 @Valid 과정에서 문제가 생기면 찾을 수 있는 클래스
  */
 
-@RestControllerAdvice
+@RestControllerAdvice // try catch를 생략할 수 있게 하는 어노테이션으로 에러를 response에 담아서 반환할 수 있다.
 @Log4j2
 public class CustomRestAdvice {
 
 
     //500에러가 난 경우 서버에서난 에러로 생각할 수 있지만 실상은 전송할 때의 데이터에 문제가 있을 수 있으므로
     //사용자에게 아래와 같은 예외 메세지를 전달한다.
-    @ExceptionHandler(BindException.class)
+
+    @ExceptionHandler(BindException.class) // 해당 예외가 발생했을 때 아래 로직을 탄다.
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     public ResponseEntity<Map<String, String>> handleBindException(BindException e) {
 
@@ -34,7 +35,7 @@ public class CustomRestAdvice {
 
         Map<String, String> errorMap = new HashMap<>();
 
-        if (e.hasErrors()) {
+        if(e.hasErrors()){
 
             BindingResult bindingResult = e.getBindingResult();
 
@@ -54,12 +55,17 @@ public class CustomRestAdvice {
 
         Map<String, String> errorMap = new HashMap<>();
 
-        errorMap.put("time", "" + System.currentTimeMillis());
-        errorMap.put("msg", "constraint fails");
+        errorMap.put("time", ""+System.currentTimeMillis());
+        errorMap.put("msg",  "constraint fails");
         return ResponseEntity.badRequest().body(errorMap);
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
+
+
+
+    @ExceptionHandler({
+            NoSuchElementException.class,
+            EmptyResultDataAccessException.class }) //추가
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     public ResponseEntity<Map<String, String>> handleNoSuchElement(Exception e) {
 
@@ -71,20 +77,5 @@ public class CustomRestAdvice {
         errorMap.put("msg",  "No Such Element Exception");
         return ResponseEntity.badRequest().body(errorMap);
     }
-
-//    @ExceptionHandler({
-//        NoSuchElementException.class,
-//        EmptyResultDataAccessException.class}) //추가
-//    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
-//    public ResponseEntity<Map<String, String>> handleNoSuchElement(Exception e) {
-//
-//        log.error(e);
-//
-//        Map<String, String> errorMap = new HashMap<>();
-//
-//        errorMap.put("time", "" + System.currentTimeMillis());
-//        errorMap.put("msg", "No Such Element Exception");
-//        return ResponseEntity.badRequest().body(errorMap);
-//    }
 
 }

@@ -27,8 +27,9 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final ModelMapper modelMapper;
 
+
     @Override
-    public long register(ReplyDTO replyDTO) {
+    public Long register(ReplyDTO replyDTO) {
 
         Reply reply = modelMapper.map(replyDTO, Reply.class);
 
@@ -49,6 +50,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void modify(ReplyDTO replyDTO) {
+
         Optional<Reply> replyOptional = replyRepository.findById(replyDTO.getRno());
 
         Reply reply = replyOptional.orElseThrow();
@@ -56,31 +58,34 @@ public class ReplyServiceImpl implements ReplyService {
         reply.changeText(replyDTO.getReplyText());
 
         replyRepository.save(reply);
+
     }
 
     @Override
     public void remove(Long rno) {
+
         replyRepository.deleteById(rno);
+
     }
 
     @Override
     public PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO) {
 
-        Pageable pageable = PageRequest.of(
-            pageRequestDTO.getPage() <= 0 ? 0 : pageRequestDTO.getPage() - 1,
-            pageRequestDTO.getSize(),
-            Sort.by("rno").ascending());
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() <=0? 0: pageRequestDTO.getPage() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("rno").ascending());
 
         Page<Reply> result = replyRepository.listOfBoard(bno, pageable);
 
-        List<ReplyDTO> dtoList = result.getContent().stream()
-            .map(reply -> modelMapper.map(reply, ReplyDTO.class)).collect(Collectors.toList());
+        List<ReplyDTO> dtoList =
+                result.getContent().stream().map(reply -> modelMapper.map(reply, ReplyDTO.class))
+                        .collect(Collectors.toList());
 
         return PageResponseDTO.<ReplyDTO>withAll()
-            .pageRequestDTO(pageRequestDTO)
-            .dtoList(dtoList)
-            .total((int)result.getTotalElements())
-            .build();
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
 
 

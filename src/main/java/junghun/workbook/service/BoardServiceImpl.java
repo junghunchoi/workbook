@@ -79,11 +79,11 @@ public class BoardServiceImpl implements BoardService
 
         Page<Board> result = boardRepository.searchAll(types , keyword , pageable);
 
-        List<BoardDTO> dtoList = result.getContent().stream()
-                .map(board -> modelMapper.map(board , BoardDTO.class)).collect(Collectors.toList());
+        List<BoardDTO> dtoList = result.getContent().stream() // stream은 아래 map을 쓰기 위한 절차? 같은거
+                .map(board -> modelMapper.map(board , BoardDTO.class)).collect(Collectors.toList()); // collect이하 문법은 map을 사용하기 위해 후행에서 사용해야함.
 
-        // 요거는 책을 봐야쓰갯다
-        return PageResponseDTO.<BoardDTO> withAll()
+        
+        return PageResponseDTO.<BoardDTO> withAll() // DTO에 설정된 Builder 이름을 가져와서 맵핑한다
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
                 .total((int) result.getTotalElements())
