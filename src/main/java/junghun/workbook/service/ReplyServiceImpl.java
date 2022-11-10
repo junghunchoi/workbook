@@ -18,8 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
-@Log4j2
 @RequiredArgsConstructor
+@Log4j2
 public class ReplyServiceImpl implements ReplyService {
 
 
@@ -31,9 +31,14 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Long register(ReplyDTO replyDTO) {
 
+
+
         Reply reply = modelMapper.map(replyDTO, Reply.class);
 
         Long rno = replyRepository.save(reply).getRno();
+
+        log.info("impl......." + replyDTO);
+        log.info("impl......." + rno);
 
         return rno;
     }
