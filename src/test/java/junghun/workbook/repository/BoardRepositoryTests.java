@@ -1,6 +1,7 @@
 package junghun.workbook.repository;
 
 
+import java.util.UUID;
 import junghun.workbook.Repository.BoardRepository;
 import junghun.workbook.entity.Board;
 import lombok.extern.log4j.Log4j2;
@@ -81,5 +82,20 @@ public class BoardRepositoryTests {
         log.info(result.getTotalPages());
 
         result.getContent().forEach(board-> log.info(board));
+    }
+
+    @Test
+    public void testInserWithImages() {
+        Board board = Board.builder()
+            .title("ImageTest")
+            .content("첨부파일테스트")
+            .writer("tester")
+            .build();
+
+        for (int i = 0; i < 3; i++) {
+            board.addImage(UUID.randomUUID().toString(), "file"+i+".jpg");
+
+        }
+        boardRepository.save(board);
     }
 }
