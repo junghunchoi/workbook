@@ -1,8 +1,11 @@
 package junghun.workbook.Repository.search;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
+import java.util.stream.Collectors;
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.entity.Board;
 import junghun.workbook.entity.QBoard;
@@ -134,4 +137,42 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
         return new PageImpl<>(dtoList, pageable, count); // 댓글, 페이지를 처리하는 내장함수
     }
+
+    @Override
+    public Page<BoardListAllDTO> searchWithAll(String[] types, String keyword,
+        Pageable pageable) {
+
+        QBoard board = QBoard.board;
+        QReply reply = QReply.reply;
+
+        // 게시물 조회 후 바로 이미지를 조회하는 쿼리 실행
+        JPQLQuery<Board> boardJPQLQuery = from(board);
+        boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board)); // left join
+
+        boardJPQLQuery.groupBy(board);
+
+        getQuerydsl().applyPagination(pageable, boardJPQLQuery);// paging
+
+        JPQLQuery<Tuple> tupleList = boardJPQLQuery.select(board, reply.countDistinct());
+
+        List<BoardListAllDTO> dtoList = tupleList.stream().map(tuple -> {
+            Board board1 = (Board) tuple.get(board);
+            long replyCount = tuple.get(1, Long.class);
+
+            BoardListAllDTO dto = BoardListAllDTO.builder()
+                .bno(board1.getBno())
+                .title(board1.getTitle())
+                .writer(board1.getWriter())
+                .regDate(board1.getRegDate())
+                .replyCount(replyCount)
+                .build();
+
+            return dto;
+        }).collect(Collectors.toList());
+
+        long totalCount = boardJPQLQuery.fetchCount();
+
+        return new PageImpl<>(dtoList, pageable, totalCount);
+    }
 }
+

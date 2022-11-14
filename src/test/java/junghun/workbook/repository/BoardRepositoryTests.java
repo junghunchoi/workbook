@@ -2,8 +2,11 @@ package junghun.workbook.repository;
 
 
 import java.util.UUID;
+import javax.transaction.Transactional;
 import junghun.workbook.Repository.BoardRepository;
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.entity.Board;
+import junghun.workbook.entity.BoardImage;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +100,61 @@ public class BoardRepositoryTests {
 
         }
         boardRepository.save(board);
+    }
+
+    @Test
+    public void testReadWithImages() {
+
+        Optional<Board> result = boardRepository.findByIdWithImage(1l);
+
+        Board board = result.orElseThrow();
+
+        log.info(board);
+        for (BoardImage boardImage : board.getImageSet()) {
+            log.info("----------boardImage" + boardImage);
+        }
+
+    }
+
+
+    @Test
+    public void testInsertAll() {
+
+        for (int i = 1; i <= 100; i++) {
+
+            Board board  = Board.builder()
+                .title("Title.."+i)
+                .content("Content.." + i)
+                .writer("writer.." + i)
+                .build();
+
+            for (int j = 0; j < 3; j++) {
+
+                if(i % 5 == 0){
+                    continue;
+                }
+                board.addImage(UUID.randomUUID().toString(),i+"file"+j+".jpg");
+            }
+            boardRepository.save(board);
+
+        }//end for
+    }
+
+    @Transactional
+    @Test
+    public void testSearchImageReplyCount() {
+
+        Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
+
+        //boardRepository.searchWithAll(null, null,pageable);
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(null,null,pageable);
+
+        log.info("---------------------------");
+        log.info(result.getTotalElements());
+
+        result.getContent().forEach(boardListAllDTO -> log.info(boardListAllDTO));
+
+
     }
 }

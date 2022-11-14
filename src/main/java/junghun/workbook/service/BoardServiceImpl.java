@@ -3,6 +3,7 @@ package junghun.workbook.service;
 
 import junghun.workbook.Repository.BoardRepository;
 import junghun.workbook.dto.BoardDTO;
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
@@ -104,6 +105,11 @@ public class BoardServiceImpl implements BoardService
                 .dtoList(result.getContent())   // 게시판에 내용이 보여야하므로
                 .total((int) result.getTotalElements()) // 댓글 갯수를 셋팅하기 위함
                 .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+        return null;
     }
 
 

@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.hibernate.annotations.BatchSize;
 
 
 @Entity
@@ -42,9 +43,9 @@ public class Board extends BaseEntity{
     @OneToMany(mappedBy = "board",
         cascade = {CascadeType.ALL},
         fetch = FetchType.LAZY,
-        orphanRemoval = true)
+        orphanRemoval = true) // 기존의 첨부파일을 모두 삭제한 후 새로 추가한 첨부파일을 엎어친다.
     @Builder.Default
-    //@BatchSize(size = 20)
+    @BatchSize(size = 20) // 게시물 조회할 경우 batch로 조회할 수 있게 어노테이션 셋팅 , db 과부하를 줄이기 위함
     private Set<BoardImage> imageSet = new HashSet<>();
 
     public void addImage(String uuid, String fileName){
