@@ -2,15 +2,10 @@ package junghun.workbook.entity;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import org.hibernate.annotations.BatchSize;
 
 
@@ -25,13 +20,13 @@ public class Board extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;
 
-    //@Column(length = 500, nullable = false) //컬럼의 길이와 null허용여부
+    @Column(length = 500, nullable = false) //컬럼의 길이와 null허용여부
     private String title;
 
-    //@Column(length = 2000, nullable = false)
+    @Column(length = 2000, nullable = false)
     private String content;
 
-    //@Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false)
     private String writer;
 
     public void change(String title, String content){
