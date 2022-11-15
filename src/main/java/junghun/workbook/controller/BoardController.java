@@ -2,6 +2,7 @@ package junghun.workbook.controller;
 
 import javax.validation.Valid;
 import junghun.workbook.dto.BoardDTO;
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
@@ -30,11 +31,10 @@ public class BoardController {
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
 
-        //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListAllDTO> responseDTO =
+                boardService.listWithAll(pageRequestDTO);
 
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO =
-                boardService.listWithReplyCount(pageRequestDTO);
-
+        log.info(responseDTO);
 
         model.addAttribute("responseDTO", responseDTO);
     }

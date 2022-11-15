@@ -31,6 +31,10 @@ public class PageResponseDTO<E> {
 
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total){
+        /*
+          시작, 마지막, 데이터에 따른 페이지 갯수 셋팅
+
+         */
 
         if(total <= 0){
             return;

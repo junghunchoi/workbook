@@ -18,6 +18,7 @@ public class UploadResultDTO {
 
 	private boolean img;
 
+	// 첨부파일  경로 , 동적으로 값을 셋팅하려면 dto에 해당 파라미터를 설정함
 	public String getLink() {
 
 		if (img) {

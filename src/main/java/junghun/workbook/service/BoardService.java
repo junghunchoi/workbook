@@ -30,7 +30,7 @@ public interface BoardService {
 
     PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO);
 
-    default Board dtoToEntity(Board board) {
+    default BoardDTO entityToDTO(Board board) {
 
         BoardDTO boardDTO = BoardDTO.builder()
                 .bno(board.getBno())

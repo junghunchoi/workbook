@@ -34,6 +34,8 @@ public class Board extends BaseEntity{
         this.content = content;
     }
 
+
+
     // 하나의 게시물에 여러개의 첨부파일이 붙을 수 있다는 소리
     @OneToMany(mappedBy = "board",
         cascade = {CascadeType.ALL},
