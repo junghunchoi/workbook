@@ -8,7 +8,6 @@ import junghun.workbook.dto.BoardImageDTO;
 import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.entity.Board;
-import junghun.workbook.entity.BoardImage;
 import junghun.workbook.entity.QBoard;
 import junghun.workbook.entity.QReply;
 import org.springframework.data.domain.Page;
@@ -127,6 +126,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 		query.where(board.bno.gt(0L));
 
 		// JPQL의 결과를 바로 dto로 처리하는 기능
+		//Projections -> 가져오고자 하는 필드만 셋팅하는 클래스, field 명이 반드시 일치해야한다.
 		JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(
 				Projections.bean(BoardListReplyCountDTO.class, board.bno, board.title, board.writer,
 						board.regDate, reply.count().as("replyCount")));
