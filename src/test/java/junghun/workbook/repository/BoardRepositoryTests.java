@@ -102,19 +102,19 @@ public class BoardRepositoryTests {
         boardRepository.save(board);
     }
 
-    @Test
-    public void testReadWithImages() {
-
-        Optional<Board> result = boardRepository.findByIdWithImage(1l);
-
-        Board board = result.orElseThrow();
-
-        log.info(board);
-        for (BoardImage boardImage : board.getImageSet()) {
-            log.info("----------boardImage" + boardImage);
-        }
-
-    }
+//    @Test
+//    public void testReadWithImages() {
+//
+//        Optional<Board> result = boardRepository.findByIdWithImage(1l);
+//
+//        Board board = result.orElseThrow();
+//
+//        log.info(board);
+//        for (BoardImage boardImage : board.getImageSet()) {
+//            log.info("----------boardImage" + boardImage);
+//        }
+//
+//    }
 
 
     @Test
