@@ -35,6 +35,7 @@ public class MemberRepositoryTests {
 
             member.addRole(MemberRole.USER);
 
+
             if (i >= 90) {
                 member.addRole(MemberRole.ADMIN);
             }
