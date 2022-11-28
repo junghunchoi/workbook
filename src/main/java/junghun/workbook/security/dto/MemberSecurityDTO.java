@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 //import org.springframework.security.core.userdetails.User;
 //import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-public class MemberSecurityDTO extends User  {
+public class MemberSecurityDTO extends User implements OAuth2User {
 
     private String mid;
     private String mpw;

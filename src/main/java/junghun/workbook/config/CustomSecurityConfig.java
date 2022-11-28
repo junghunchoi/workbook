@@ -1,10 +1,10 @@
 package junghun.workbook.config;
 
 
-import java.beans.PersistenceDelegate;
 import javax.sql.DataSource;
 import junghun.workbook.security.CustomUserDetailService;
 import junghun.workbook.security.handler.Custom403Handler;
+import junghun.workbook.security.handler.CustomSocialLoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -26,62 +27,68 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 필요한 화면에만 보안설정을 할 수있는 어노테이션
 public class CustomSecurityConfig {
 
-	//주입필요
-	private final DataSource dataSource;
-	private final CustomUserDetailService userDetailService;
+    //주입필요
+    private final DataSource dataSource;
+    private final CustomUserDetailService userDetailService;
 
 
-	// 설정을 통해 사용자가 접근을 제어한다.
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-		log.info("-------------configure-----------");
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomSocialLoginSuccessHandler(passwordEncoder());
+    }
 
-		//로그인 화면에서 로그인을 진행 및 아래의 템플릿을 사용
-		http.formLogin().loginPage("/member/login");
+    // 설정을 통해 사용자가 접근을 제어한다.
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        log.info("-------------configure-----------");
 
-		//csrf란 보안기술이 있는데 이를 처리하기 위한 과정이 복잡하므로 disable처리한다.
-		http.csrf().disable();
+        //로그인 화면에서 로그인을 진행 및 아래의 템플릿을 사용
+        http.formLogin().loginPage("/member/login");
 
-		http.rememberMe()
-			.key("12345678")
-			.tokenRepository(persistentTokenRepository())
-			.userDetailsService(userDetailService)
-			.tokenValiditySeconds(60*60*24*30); //쿠키의 유효기간 -> 30일
+        //csrf란 보안기술이 있는데 이를 처리하기 위한 과정이 복잡하므로 disable처리한다.
+        http.csrf().disable();
 
-		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+        http.rememberMe().key("12345678").tokenRepository(persistentTokenRepository())
+            .userDetailsService(userDetailService)
+            .tokenValiditySeconds(60 * 60 * 24 * 30); //쿠키의 유효기간 -> 30일
 
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
-		return http.build();
-	}
+        //oauth2 로그인을 사용하다는 설정
+        http.oauth2Login().loginPage("/member/logon")
+            .successHandler(authenticationSuccessHandler());
 
-	@Bean
-	public AccessDeniedHandler accessDeniedHandler() {
-		return new Custom403Handler();
-	}
+        return http.build();
+    }
 
-
-	// js ,css 같이 정적인 파일에는 필터링 하지않도록 조치
-	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer() {
-		log.info("-----web configure-------");
-
-		return (web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
-	}
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new Custom403Handler();
+    }
 
 
+    // js ,css 같이 정적인 파일에는 필터링 하지않도록 조치
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        log.info("-----web configure-------");
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+        return (web -> web.ignoring()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
+    }
 
 
-	//remeber-me 쿠키를 관리하기 위한 메소드
-	@Bean
-	public PersistentTokenRepository persistentTokenRepository() {
-		JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
-		repo.setDataSource(dataSource);
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-		return repo;
-	}
+
+    //remeber-me 쿠키를 관리하기 위한 메소드
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);
+
+        return repo;
+    }
 }
