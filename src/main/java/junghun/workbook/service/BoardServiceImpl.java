@@ -49,6 +49,7 @@ public class BoardServiceImpl implements BoardService
     public BoardDTO readOne(Long bno) {
 
         //board_image까지 조인 처리되는 findByWithImages()를 이용
+        //findbyid()의 타입은 Optional<T>
         Optional<Board> result = boardRepository.findByIdWithImages(bno);
 
         Board board = result.orElseThrow();
@@ -102,7 +103,7 @@ public class BoardServiceImpl implements BoardService
                 .map(board -> modelMapper.map(board,BoardDTO.class)).collect(Collectors.toList());
 
 
-        return PageResponseDTO.<BoardDTO>withAll()
+        return PageResponseDTO.<BoardDTO>withAll() // 요기는 페이징 처리의 기본적인 셋팅방법으로 어떤식으로 셋팅하는지만 알고 넘어가면 됨
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
                 .total((int)result.getTotalElements())

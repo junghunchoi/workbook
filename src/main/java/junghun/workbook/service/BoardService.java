@@ -6,8 +6,7 @@ import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
 import junghun.workbook.entity.Board;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 import java.util.stream.Collectors;

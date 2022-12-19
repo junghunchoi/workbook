@@ -1,6 +1,7 @@
 package junghun.workbook.controller;
 
 import javax.validation.Valid;
+
 import junghun.workbook.dto.BoardDTO;
 import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
@@ -26,9 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/board")
@@ -42,10 +41,8 @@ public class BoardController {
     private final BoardService boardService;
 
 
-
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model){
-
+    public void list(PageRequestDTO pageRequestDTO, Model model) {
 
 
         PageResponseDTO<BoardListAllDTO> responseDTO =
@@ -59,7 +56,7 @@ public class BoardController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
-    public void registerGET(){
+    public void registerGET() {
 
     }
 
@@ -67,19 +64,19 @@ public class BoardController {
     //BindingResult -> 유효성 검사를 위한 클래스로 아래 if문을 통해 검증한다.
     //RedirectAttributes -> 리다이렉트 할때 파라미터를 던지기 위한 클래스
     @PostMapping("/register")
-    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         log.info("board POST register.......");
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/board/register";
         }
 
         log.info(boardDTO);
 
-        Long bno  = boardService.register(boardDTO);
+        Long bno = boardService.register(boardDTO);
 
         redirectAttributes.addFlashAttribute("result", bno);
 
@@ -87,10 +84,9 @@ public class BoardController {
     }
 
 
-
     @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
     @GetMapping({"/read", "/modify"})
-    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
+    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
 
         BoardDTO boardDTO = boardService.readOne(bno);
 
@@ -103,23 +99,23 @@ public class BoardController {
 
     @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/modify")
-    public String modify( @Valid BoardDTO boardDTO,
-                          BindingResult bindingResult,
-                          PageRequestDTO pageRequestDTO,
-                          RedirectAttributes redirectAttributes){
+    public String modify(@Valid BoardDTO boardDTO,
+                         BindingResult bindingResult,
+                         PageRequestDTO pageRequestDTO,
+                         RedirectAttributes redirectAttributes) {
 
         log.info("board modify post......." + boardDTO);
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
 
             String link = pageRequestDTO.getLink();
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 
             redirectAttributes.addAttribute("bno", boardDTO.getBno());
 
-            return "redirect:/board/modify?"+link;
+            return "redirect:/board/modify?" + link;
         }
 
         boardService.modify(boardDTO);
@@ -132,13 +128,11 @@ public class BoardController {
     }
 
 
-
-
     @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
 
-        Long bno  = boardDTO.getBno();
+        Long bno = boardDTO.getBno();
         log.info("remove post.. " + bno);
 
         boardService.remove(bno);
@@ -146,7 +140,7 @@ public class BoardController {
         //게시물이 삭제되었다면 첨부 파일 삭제
         log.info(boardDTO.getFileNames());
         List<String> fileNames = boardDTO.getFileNames();
-        if(fileNames != null && fileNames.size() > 0){
+        if (fileNames != null && fileNames.size() > 0) {
             removeFiles(fileNames);
         }
 
@@ -157,9 +151,9 @@ public class BoardController {
     }
 
 
-    public void removeFiles(List<String> files){
+    public void removeFiles(List<String> files) {
 
-        for (String fileName:files) {
+        for (String fileName : files) {
 
             Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
             String resourceName = resource.getFilename();
@@ -181,5 +175,6 @@ public class BoardController {
 
         }//end for
     }
+
 
 }

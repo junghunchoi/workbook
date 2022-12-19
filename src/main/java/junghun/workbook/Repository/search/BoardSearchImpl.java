@@ -18,6 +18,8 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+//QuerydslRepositorySupport를 상속해야 querydsl을 사용할 수 있
 public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardSearch {
 
 	public BoardSearchImpl() {
@@ -40,8 +42,8 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 		query.where(booleanBuilder); //booleanBuilder를 통해 생성된 where문을 where절에 셋팅한다.
 		query.where(board.bno.gt(0L));
 
-		//paging
-		this.getQuerydsl().applyPagination(pageable, query); // 요거는 관용적으로 사용하는 듯
+		//paging처리를 위한 내용을 쿼리에 적용시킨다.
+		this.getQuerydsl().applyPagination(pageable, query);
 
 		List<Board> list = query.fetch();
 
@@ -50,7 +52,6 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 		return null;
 	}
 
-	@SuppressWarnings({"checkstyle:WhitespaceAround", "checkstyle:Indentation"})
 	@Override
 	public Page<Board> searchAll(String[] types, String keyword, Pageable pageable) {
 
@@ -175,7 +176,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
 		List<BoardListAllDTO> dtoList = tupleList.stream().map(tuple -> {
 			Board board1 = (Board) tuple.get(board);
-			long replyCount = tuple.get(1, Long.class);
+			long replyCount = tuple.get(1, Long.class); // 이건 튜블의 첫번째 인덱스의 댓글갯수를 가져온다는건가?
 
 			BoardListAllDTO dto = BoardListAllDTO.builder()
 					.bno(board1.getBno())

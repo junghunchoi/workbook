@@ -12,23 +12,20 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
+@MappedSuperclass // 공통으로 사용하는 컬럼을 지정하고 상속한다.
 @EntityListeners(
-        value={AuditingEntityListener.class}
+        value = {AuditingEntityListener.class}
 )
 @Getter
-@Data
 abstract class BaseEntity {
 
     @CreatedDate
-    @Column(name="regdate", updatable = false)
+    @Column(name = "regdate", updatable = false)
     private LocalDateTime regDate;
 
     @LastModifiedDate
-    @Column(name="moddate")
+    @Column(name = "moddate")
     private LocalDateTime modDate;
-
-
 
 
 }
