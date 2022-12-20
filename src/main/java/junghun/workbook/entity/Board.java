@@ -14,7 +14,7 @@ import org.hibernate.annotations.BatchSize;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "imageSet")
+@ToString(exclude = "imageSet") // imageset은 tostring 에서 제외한다.
 public class Board extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +36,8 @@ public class Board extends BaseEntity{
 
 
 
-    // 하나의 게시물에 여러개의 첨부파일이 붙을 수 있다는 소리
-    @OneToMany(mappedBy = "board",
+
+    @OneToMany(mappedBy = "board",// 하나의 게시물에 여러개의 첨부파일이 붙을 수 있다는 소리
         cascade = {CascadeType.ALL},
         fetch = FetchType.LAZY,
         orphanRemoval = true) // 기존의 첨부파일을 모두 삭제한 후 새로 추가한 첨부파일을 엎어친다.
