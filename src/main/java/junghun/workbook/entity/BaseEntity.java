@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass // 공통으로 사용하는 컬럼을 지정하고 상속한다.
 @EntityListeners(
-        value = {AuditingEntityListener.class}
+    value = {AuditingEntityListener.class}
 )
 @Getter
 abstract class BaseEntity {
