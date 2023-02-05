@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
+import javax.validation.constraints.NotEmpty;
 import lombok.*;
 
 import org.hibernate.annotations.BatchSize;
