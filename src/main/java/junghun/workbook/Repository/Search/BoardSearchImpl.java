@@ -2,6 +2,7 @@ package junghun.workbook.Repository.Search;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import junghun.workbook.dto.BoardListReplyCountDTO;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
@@ -69,5 +70,11 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         long count = query.fetchCount();
 
         return new PageImpl<>(list,pageable,count);
+    }
+
+    @Override
+    public Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword,
+        Pageable pageable) {
+        return null;
     }
 }
