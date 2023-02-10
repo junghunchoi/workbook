@@ -2,6 +2,7 @@ package junghun.workbook.service;
 
 
 import junghun.workbook.dto.BoardDTO;
+import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
 
@@ -16,5 +17,8 @@ public interface BoardService {
     void remove(Long bno);
 
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
+
 
 }

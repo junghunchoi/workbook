@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import junghun.workbook.Repository.BoardRepository;
 import junghun.workbook.dto.BoardDTO;
+import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
 import junghun.workbook.entity.Board;
@@ -84,6 +85,24 @@ public class BoardServiceImpl implements BoardService {
         return PageResponseDTO.<BoardDTO>withAll()
             .pageRequestDTO(pageRequestDTO)
             .dtoList(dtoList)
+            .total((int)result.getTotalElements())
+            .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(
+        PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword,
+            pageable);
+
+        return PageResponseDTO.<BoardListReplyCountDTO>withAll()
+            .pageRequestDTO(pageRequestDTO)
+            .dtoList(result.getContent())
             .total((int)result.getTotalElements())
             .build();
     }
