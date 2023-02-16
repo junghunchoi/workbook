@@ -78,12 +78,27 @@
     </div>
 
     <script src ="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/static/js/reply.js"></script>
+    <script src="/js/reply.js"></script>
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
 
+const bno = [[${dto.bno}]]
+
+const replyList = document.querySelector('.replyList')
+const replyPaging = document.querySelector('.replyPaging')
 
 
+function printReplies(dtoList) { // 댓글 목록 출력
+    let str = '';
+
+    if (dtoList && dtoList.length > 0) {
+        for (const bno of dtoList) {
+            str+=<li class=}}></li>
+        }
+    }
+}
+
+printReplies(1,10)
 </script>
