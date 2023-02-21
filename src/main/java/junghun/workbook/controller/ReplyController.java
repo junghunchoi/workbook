@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,12 +80,11 @@ public class ReplyController {
         return resultMap;
     }
 
-    // JASON으로 보내기 위해선 @RequestBody 필요
-    @ApiOperation(value = "Modify Reply", notes = "put 방식으로 댓글 수정")
-    @PostMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> remove(@PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO) {
+    @ApiOperation(value = "Modify Reply", notes = "PUT 방식으로 특정 댓글 수정")
+    @PutMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE )
+    public Map<String,Long> remove( @PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO ){
 
-        replyDTO.setRno(rno);
+        replyDTO.setRno(rno); //번호를 일치시킴
 
         replyService.modify(replyDTO);
 

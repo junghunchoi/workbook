@@ -51,6 +51,10 @@ dependencies {
 
 	implementation 'net.coobird:thumbnailator:0.4.16'
 
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
