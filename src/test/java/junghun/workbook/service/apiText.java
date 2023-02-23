@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.json.simple.JSONArray;
@@ -26,7 +27,7 @@ public class apiText {
 
     //https://api.odcloud.kr/api/RltmArpltnInforInqireSvrc/v1/getMsrstnAcctoRltmMesureDnsty?numOfRows=1&stationName=%EA%B0%95%EB%82%A8%EA%B5%AC&dataTerm=DAILY&ver=1.3&serviceKey=B2f0CZtRmiIZZ14OGurfGv7dbUnvm3V0mmwCrmHxS%2BXRN3zHO1bNH6Zq6IA7rqY11fXOIHniNKqXiVy%2B9J61sw%3D%3D&returnType=json
     public static void main(String[] args)
-        throws IOException, JSONException, ParseException, org.json.simple.parser.ParseException {
+        throws IOException,  org.json.simple.parser.ParseException {
 
         StringBuilder urlBuilder = new StringBuilder("https://api.odcloud.kr/api/RltmArpltnInforInqireSvrc/v1/getMsrstnAcctoRltmMesureDnsty?numOfRows=100&stationName=%EA%B0%95%EB%82%A8%EA%B5%AC&dataTerm=3MONTH&ver=1.3&serviceKey=B2f0CZtRmiIZZ14OGurfGv7dbUnvm3V0mmwCrmHxS%2BXRN3zHO1bNH6Zq6IA7rqY11fXOIHniNKqXiVy%2B9J61sw%3D%3D&returnType=json"); /*URL*/
         URL url = new URL(urlBuilder.toString());
@@ -56,7 +57,7 @@ public class apiText {
 
         result = bf.readLine();
 
-        System.out.println("result" + result);
+
         // parser 시작
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject =  (JSONObject) jsonParser.parse(result);
@@ -64,12 +65,19 @@ public class apiText {
         JSONObject innerbody = (JSONObject) body.get("body");
         System.out.println("innerbody" + innerbody.get("items"));
 
+        Iterator iter = innerbody.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>) iter.next();
+
+        }
+
         ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<>();
 
         JSONArray jsonArray = (JSONArray) innerbody.get("items");
 
+        Object[] list = jsonArray.stream().toArray(Object[]::new);
 
-        //parser 종료
+
 
         rd.close();
         conn.disconnect();
