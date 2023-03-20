@@ -47,13 +47,15 @@ dependencies {
 
 
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+//	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
 	implementation 'net.coobird:thumbnailator:0.4.16'
 
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
 
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
 
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'

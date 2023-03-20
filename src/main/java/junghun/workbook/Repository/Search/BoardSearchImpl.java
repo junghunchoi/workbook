@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import junghun.workbook.dto.BoardListReplyCountDTO;
+import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import junghun.workbook.entity.QReply;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,8 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardSearch{
 
 
-    public BoardSearchImpl() {
+    public BoardSearchImpl() { // querydsl을 사용하기 위해 super로 사용하고자하는 클래스를 넣어둔다.
+
         super(Board.class);
     }
 
@@ -115,5 +117,51 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         long count = dtoQuery.fetchCount();
 
         return new PageImpl<>(dtoList, pageable, count);
+    }
+
+    /////// LIKE 추가
+    @Override
+    public Page<BoardListReplyLikeCountDTO> searchWithReplyLikeCount(String[] types, String keyword,
+        Pageable pageable) {
+
+        QBoard board = QBoard.board;
+        QReply reply = QReply.reply;
+
+        JPQLQuery<Board> query = from(board);
+        query.leftJoin(reply).on(reply.board.eq(board));
+
+        query.groupBy(board);
+
+        if ((types != null && types.length > 0) && keyword != null) {
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+            for (String type : types) {
+                switch (type) {
+                    case "t":
+                        booleanBuilder.or(board.title.contains(keyword));
+                    case "c":
+                        booleanBuilder.or(board.content.contains(keyword));
+                    case "w":
+                        booleanBuilder.or(board.writer.contains(keyword));
+                }
+            }
+            query.where(booleanBuilder);
+        }
+        query.where(board.bno.gt(0l));
+
+
+        JPQLQuery<BoardListReplyLikeCountDTO> dtoQuery = query.select(
+            Projections.bean(BoardListReplyLikeCountDTO.class, board.bno, board.title, board.writer,
+                board.regDate,board.thumb , reply.count().as("replyCount")));
+
+        this.getQuerydsl().applyPagination(pageable, dtoQuery);
+
+        List<BoardListReplyLikeCountDTO> dtoList = dtoQuery.fetch();
+
+        long count = dtoQuery.fetchCount();
+
+        return new PageImpl<>(dtoList, pageable, count);
+
+
     }
 }

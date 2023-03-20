@@ -1,6 +1,8 @@
 package junghun.workbook.config;
 
+import java.util.concurrent.TimeUnit;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,7 +22,8 @@ public class CustomServletConfig implements WebMvcConfigurer {
             .addResourceLocations("classpath:/static/css/");
         registry.addResourceHandler("/assets/**").
             addResourceLocations("classpath:/static/assets/");
-
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/templates/", "classpath:/static/");
     }
 
 }

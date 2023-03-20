@@ -28,6 +28,9 @@ public class BoardDTO {
 
     @NotEmpty
     private String Writer;
+
+    private Long thumb;
+
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 

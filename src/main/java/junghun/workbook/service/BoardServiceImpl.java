@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import junghun.workbook.Repository.BoardRepository;
 import junghun.workbook.dto.BoardDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
+import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
 import junghun.workbook.entity.Board;
@@ -68,6 +69,21 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public Long thumbsup(Long bno) {
+        Optional<Board> result = boardRepository.findById(bno);
+
+
+        Board board = result.orElseThrow();
+
+        board.likeUp(board.getThumb());
+
+
+        boardRepository.save(board);
+
+        return board.getThumb();
+    }
+
+    @Override
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
 
         String[] types = pageRequestDTO.getTypes();
@@ -105,5 +121,24 @@ public class BoardServiceImpl implements BoardService {
             .dtoList(result.getContent())
             .total((int)result.getTotalElements())
             .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListReplyLikeCountDTO> listWithReplyLikeCount(
+        PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListReplyLikeCountDTO> result = boardRepository.searchWithReplyLikeCount(types,
+            keyword, pageable);
+
+
+        return PageResponseDTO.<BoardListReplyLikeCountDTO>withAll()
+                              .pageRequestDTO(pageRequestDTO)
+                              .dtoList(result.getContent())
+                              .total((int)result.getTotalElements())
+                              .build();
     }
 }

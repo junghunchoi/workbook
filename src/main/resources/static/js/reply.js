@@ -7,6 +7,7 @@ async function get1(bno) {
 async function getList({bno, page, size, goLast}){
 
     const result = await axios.get(`/replies/list/${bno}`, {params: {page, size}})
+    console.log(result)
 
   // 최근 댓글이 가장 뒷 페이지에 존재한다면 마지막 페이지를 호출 할 수있도록함.
   if (goLast) {
@@ -38,4 +39,14 @@ async function modifyReply(replyObj) {
 async function removeReply(rno) {
   const response = await axios.delete(`/replies/${rno}`)
   return response.data
+}
+
+async function thumbsup(bno) {
+  const response = await axios.post(`/board/thumb/${bno}`)
+  return response.data
+}
+
+
+async function dustlist(param) {
+  const response = await  axios.get(`/dust/list`)
 }

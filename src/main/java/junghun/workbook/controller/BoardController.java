@@ -1,8 +1,11 @@
 package junghun.workbook.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.validation.Valid;
 import junghun.workbook.dto.BoardDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
+import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
 import junghun.workbook.service.BoardService;
@@ -29,7 +32,9 @@ public class BoardController {
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model){
 
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+//        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+        PageResponseDTO<BoardListReplyLikeCountDTO> responseDTO = boardService.listWithReplyLikeCount(
+            pageRequestDTO);
 
         log.info(responseDTO);
 
@@ -114,6 +119,21 @@ public class BoardController {
 
         return "redirect:/board/read";
     }
+
+    @GetMapping("/thumb")
+    public Map<String, Long> thumb(Long bno, RedirectAttributes redirectAttributes) {
+
+        Long addthumb = boardService.thumbsup(bno);
+
+        redirectAttributes.addFlashAttribute("result", "thumb up");
+
+        Map<String, Long> resultMap = new HashMap<>();
+
+        resultMap.put("bno", addthumb);
+
+        return resultMap;
+    }
+
 
 
     @PostMapping("/remove")
