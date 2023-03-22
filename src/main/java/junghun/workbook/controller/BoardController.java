@@ -12,12 +12,16 @@ import junghun.workbook.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -68,16 +72,6 @@ public class BoardController {
     }
 
 
-//    @GetMapping("/read")
-//    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
-//
-//        BoardDTO boardDTO = boardService.readOne(bno);
-//
-//        log.info(boardDTO);
-//
-//        model.addAttribute("dto", boardDTO);
-//
-//    }
 
 
     @GetMapping({"/read", "/modify"})
@@ -120,18 +114,24 @@ public class BoardController {
         return "redirect:/board/read";
     }
 
-    @GetMapping("/thumb")
-    public Map<String, Long> thumb(Long bno, RedirectAttributes redirectAttributes) {
+    @PostMapping(value = "/thumb", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void thumb(@RequestBody  BoardDTO bno, RedirectAttributes redirectAttributes){
 
-        Long addthumb = boardService.thumbsup(bno);
+
+
+        log.info(bno);
+
+        Long num = bno.getBno();
+
+         boardService.thumbsup(num);
 
         redirectAttributes.addFlashAttribute("result", "thumb up");
 
-        Map<String, Long> resultMap = new HashMap<>();
+        Map<String, Integer> resultMap = new HashMap<>();
 
-        resultMap.put("bno", addthumb);
+        resultMap.put("bno", 1);
 
-        return resultMap;
+//        return resultMap;
     }
 
 

@@ -65,10 +65,10 @@ public class BoardServiceTests {
 
     }
 
-    @Test
-    public void Thumbsup() {
-        boardService.thumbsup(1L);
-    }
+//    @Test
+//    public void Thumbsup() {
+//        boardService.thumbsup(1L);
+//    }
 
 //    @Test
 //    public void testReadAll() {

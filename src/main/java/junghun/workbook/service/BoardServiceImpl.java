@@ -70,6 +70,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Long thumbsup(Long bno) {
+
+
+
         Optional<Board> result = boardRepository.findById(bno);
 
 
