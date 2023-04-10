@@ -3,6 +3,7 @@ package junghun.workbook.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,12 +28,14 @@ public class BoardDTO {
     private String content;
 
     @NotEmpty
-    private String Writer;
+    private String writer;
 
     private Long thumb;
 
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    private List<String> fileNames;
 
 
 }

@@ -1,5 +1,6 @@
 package junghun.workbook.Repository.Search;
 
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +21,7 @@ public interface BoardSearch {
     Page<BoardListReplyLikeCountDTO> searchWithReplyLikeCount(String[] types, String keyword,
         Pageable pageable);
 
+
+
+    Page<BoardListAllDTO> searchWithAll(String[] types, String keyword, Pageable pageable);
 }

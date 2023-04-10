@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import junghun.workbook.Repository.BoardRepository;
 import junghun.workbook.dto.BoardDTO;
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
@@ -58,6 +59,16 @@ public class BoardServiceImpl implements BoardService {
         Board board = result.orElseThrow();
 
         board.change(boardDTO.getTitle(), boardDTO.getContent());
+
+        //첨부파일의 처리
+        board.clearImages();
+
+        if(boardDTO.getFileNames() != null){
+            for (String fileName : boardDTO.getFileNames()) {
+                String[] arr = fileName.split("_");
+                board.addImage(arr[0], arr[1]);
+            }
+        }
 
         boardRepository.save(board);
     }
@@ -143,5 +154,10 @@ public class BoardServiceImpl implements BoardService {
                               .dtoList(result.getContent())
                               .total((int)result.getTotalElements())
                               .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+        return null;
     }
 }

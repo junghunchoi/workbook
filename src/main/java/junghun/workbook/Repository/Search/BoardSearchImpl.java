@@ -1,8 +1,12 @@
 package junghun.workbook.Repository.Search;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
+import java.util.stream.Collectors;
+import junghun.workbook.dto.BoardImageDTO;
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
 import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import junghun.workbook.entity.QReply;
@@ -164,4 +168,71 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
 
     }
+
+    @Override
+    public Page<BoardListAllDTO> searchWithAll(String[] types, String keyword, Pageable pageable) {
+
+        QBoard board = QBoard.board;
+        QReply reply = QReply.reply;
+
+        // 게시물 조회 후 바로 이미지를 조회하는 쿼리 실행
+        JPQLQuery<Board> boardJPQLQuery = from(board);
+        boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board)); // left join
+
+        if ((types != null && types.length > 0) && keyword != null) {
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+            for (String type : types) {
+                switch (type) {
+                    case "t":
+                        booleanBuilder.or(board.title.contains(keyword));
+                    case "c":
+                        booleanBuilder.or(board.content.contains(keyword));
+                    case "w":
+                        booleanBuilder.or(board.writer.contains(keyword));
+                        break;
+                }
+            }
+        }
+
+        boardJPQLQuery.groupBy(board);
+
+
+        getQuerydsl().applyPagination(pageable, boardJPQLQuery);// paging
+
+        JPQLQuery<Tuple> tupleList = boardJPQLQuery.select(board, reply.countDistinct());
+
+
+        List<BoardListAllDTO> dtoList = tupleList.stream().map(tuple -> {
+            Board board1 = (Board) tuple.get(board);
+            long replyCount = tuple.get(1, Long.class); // 이건 튜블의 첫번째 인덱스의 댓글갯수를 가져온다는건가?
+
+            BoardListAllDTO dto = BoardListAllDTO.builder()
+                                                 .bno(board1.getBno())
+                                                 .title(board1.getTitle())
+                                                 .writer(board1.getWriter())
+                                                 .regDate(board1.getRegDate())
+                                                 .replyCount(replyCount)
+                                                 .build();
+
+
+            // BoardImage를 dto로 처리하는 부분
+            List<BoardImageDTO> imageDTOS = board1.getImageSet().stream().sorted().map(boardImage -> BoardImageDTO.builder()
+                                                                                                                  .uuid(boardImage.getUuid())
+                                                                                                                  .fileName(boardImage.getFileName())
+                                                                                                                  .ord(boardImage.getOrd())
+                                                                                                                  .build()
+            ).collect(Collectors.toList());
+
+            dto.setBoardImages(imageDTOS);
+
+            return dto;
+        }).collect(Collectors.toList());
+
+        long totalCount = boardJPQLQuery.fetchCount();
+
+        return new PageImpl<>(dtoList, pageable, totalCount);
+    }
+
+
 }
