@@ -33,11 +33,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-		log.info("userRequest");
-		log.info(userRequest);
-
-		log.info("oauth2 user ......................");
-
 		ClientRegistration clientRegistration = userRequest.getClientRegistration();
 
 		String clientName = clientRegistration.getClientName();

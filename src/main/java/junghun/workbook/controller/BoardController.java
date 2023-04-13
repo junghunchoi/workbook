@@ -46,15 +46,15 @@ public class BoardController {
 
 
         PageResponseDTO<BoardListAllDTO> responseDTO =
-                boardService.listWithAll(pageRequestDTO);
+                boardService.listWithAll(pageRequestDTO); // dto를 entity로 변환
 
-        log.info(responseDTO);
+
 
         model.addAttribute("responseDTO", responseDTO);
     }
 
 
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
     public void registerGET() {
 
@@ -84,27 +84,25 @@ public class BoardController {
     }
 
 
-    @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
+   // @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
 
         BoardDTO boardDTO = boardService.readOne(bno);
 
-        log.info(boardDTO);
+        log.info("이미지포함 boarddto : " + boardDTO);
 
         model.addAttribute("dto", boardDTO);
 
     }
 
 
-    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
+//    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/modify")
     public String modify(@Valid BoardDTO boardDTO,
                          BindingResult bindingResult,
                          PageRequestDTO pageRequestDTO,
                          RedirectAttributes redirectAttributes) {
-
-        log.info("board modify post......." + boardDTO);
 
         if (bindingResult.hasErrors()) {
             log.info("has errors.......");
@@ -128,7 +126,7 @@ public class BoardController {
     }
 
 
-    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
+//    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
 

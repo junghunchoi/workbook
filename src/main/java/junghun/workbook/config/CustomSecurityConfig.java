@@ -37,10 +37,9 @@ public class CustomSecurityConfig {
         return new CustomSocialLoginSuccessHandler(passwordEncoder());
     }
 
-    // 설정을 통해 사용자가 접근을 제어한다.
+    // 로그인 화면에서 로그인을 진행한다. 설정을 통해 사용자가 접근을 제어한다.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        log.info("-------------configure-----------");
 
         //로그인 화면에서 로그인을 진행 및 아래의 템플릿을 사용
         http.formLogin().loginPage("/member/login");
@@ -48,14 +47,17 @@ public class CustomSecurityConfig {
         //csrf란 보안기술이 있는데 이를 처리하기 위한 과정이 복잡하므로 disable처리한다.
         http.csrf().disable();
 
-        http.rememberMe().key("12345678").tokenRepository(persistentTokenRepository())
+        http.rememberMe()
+            .key("12345678")
+            .tokenRepository(persistentTokenRepository())
             .userDetailsService(userDetailService)
             .tokenValiditySeconds(60 * 60 * 24 * 30); //쿠키의 유효기간 -> 30일
 
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
         //oauth2 로그인을 사용하다는 설정
-        http.oauth2Login().loginPage("/member/logon")
+        http.oauth2Login()
+            .loginPage("/member/logon")
             .successHandler(authenticationSuccessHandler());
 
         return http.build();
@@ -70,10 +72,11 @@ public class CustomSecurityConfig {
     // js ,css 같이 정적인 파일에는 필터링 하지않도록 조치
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        log.info("-----web configure-------");
 
         return (web -> web.ignoring()
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
+                          .requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
+
+
     }
 
 
@@ -92,3 +95,7 @@ public class CustomSecurityConfig {
         return repo;
     }
 }
+
+
+
+

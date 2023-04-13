@@ -27,6 +27,7 @@ public class CustomUserDetailService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 
 
+	//UserDetails 는 사용자 인증 관련된 정보를 저장하는 인터페이스.
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
