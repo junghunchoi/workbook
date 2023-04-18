@@ -2,9 +2,11 @@ package junghun.workbook.config;
 
 
 import javax.sql.DataSource;
+
 import junghun.workbook.security.CustomUserDetailService;
-import junghun.workbook.security.handler.Custom403Handler;
-import junghun.workbook.security.handler.CustomSocialLoginSuccessHandler;
+
+
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -32,10 +34,12 @@ public class CustomSecurityConfig {
     private final CustomUserDetailService userDetailService;
 
 
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new CustomSocialLoginSuccessHandler(passwordEncoder());
-    }
+
+
+//    @Bean
+//    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+//        return new CustomSocialLoginSuccessHandler(passwordEncoder());
+//    }
 
     // 로그인 화면에서 로그인을 진행한다. 설정을 통해 사용자가 접근을 제어한다.
     @Bean
@@ -53,20 +57,17 @@ public class CustomSecurityConfig {
             .userDetailsService(userDetailService)
             .tokenValiditySeconds(60 * 60 * 24 * 30); //쿠키의 유효기간 -> 30일
 
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+//        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
-        //oauth2 로그인을 사용하다는 설정
-        http.oauth2Login()
-            .loginPage("/member/logon")
-            .successHandler(authenticationSuccessHandler());
+
 
         return http.build();
     }
 
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new Custom403Handler();
-    }
+//    @Bean
+//    public AccessDeniedHandler accessDeniedHandler() {
+//        return new Custom403Handler();
+//    }
 
 
     // js ,css 같이 정적인 파일에는 필터링 하지않도록 조치

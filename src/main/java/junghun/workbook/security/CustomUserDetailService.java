@@ -1,9 +1,7 @@
 package junghun.workbook.security;
 
 
-import junghun.workbook.Repository.MemberRepository;
-import junghun.workbook.entity.Member;
-import junghun.workbook.security.dto.MemberSecurityDTO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,11 +18,14 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-@RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
-	// memberrepository에서 주입 받아서 로그인에 필요한 dto를 반환하도록 함
 
-	private final MemberRepository memberRepository;
+	private PasswordEncoder passwordEncoder;
+
+	public CustomUserDetailService() {
+		this.passwordEncoder = new BCryptPasswordEncoder();
+	}
+
 
 
 	//UserDetails 는 사용자 인증 관련된 정보를 저장하는 인터페이스.
@@ -33,29 +34,12 @@ public class CustomUserDetailService implements UserDetailsService {
 
 		log.info("loadUserByUsername: " + username);
 
-		Optional<Member> result = memberRepository.getWithRoles(username);
+		UserDetails userDetails = User.builder()
+									  .username("user1")
+									  .password(passwordEncoder.encode("1111"))
+									  .authorities("ROLE_USER")
+									  .build();
 
-		if (result.isEmpty()) { //해당 아이디를 가진 사용자가 없다면
-			throw new UsernameNotFoundException("username not found...");
-		}
-
-		Member member = result.get();
-
-		MemberSecurityDTO memberSecurityDTO =
-				new MemberSecurityDTO(
-						member.getMid(),
-						member.getMpw(),
-						member.getEmail(),
-						member.isDel(),
-						false,
-						member.getRoleSet()
-								.stream().map(memberRole -> new SimpleGrantedAuthority("ROLE_" + memberRole.name()))
-								.collect(Collectors.toList())
-				);
-
-		log.info("memberSecurityDTO");
-		log.info(memberSecurityDTO);
-
-		return memberSecurityDTO;
+		return userDetails;
 	}
 		}

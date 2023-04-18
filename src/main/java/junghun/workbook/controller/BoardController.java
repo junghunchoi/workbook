@@ -54,7 +54,7 @@ public class BoardController {
     }
 
 
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
     public void registerGET() {
 
@@ -84,7 +84,7 @@ public class BoardController {
     }
 
 
-   // @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
+    @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
 
