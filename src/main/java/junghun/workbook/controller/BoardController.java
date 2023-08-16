@@ -1,29 +1,33 @@
 package junghun.workbook.controller;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.validation.Valid;
+
 import junghun.workbook.dto.BoardDTO;
+import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
-import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
+import junghun.workbook.entity.Board;
 import junghun.workbook.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.*;
 
 @Controller
 @RequestMapping("/board")
@@ -31,40 +35,48 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class BoardController {
 
+    @Value("${junghun.workbook.upload.path}")// import 시에 springframework으로 시작하는 Value
+    private String uploadPath;
+
     private final BoardService boardService;
 
-    @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model){
 
-//        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
-        PageResponseDTO<BoardListReplyLikeCountDTO> responseDTO = boardService.listWithReplyLikeCount(
-            pageRequestDTO);
+    @GetMapping("/list")
+    public void list(PageRequestDTO pageRequestDTO, Model model) {
+
+
+        PageResponseDTO<BoardListAllDTO> responseDTO =
+                boardService.listWithAll(pageRequestDTO);
 
         log.info(responseDTO);
 
         model.addAttribute("responseDTO", responseDTO);
-
     }
 
+
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
-    public void registerGET(){
+    public void registerGET() {
 
     }
 
+    //@Valid -> DTO에서 설정한 제약을 검증하는 어노테이션
+    //BindingResult -> 유효성 검사를 위한 클래스로 아래 if문을 통해 검증한다.
+    //RedirectAttributes -> 리다이렉트 할때 파라미터를 던지기 위한 클래스
     @PostMapping("/register")
-    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         log.info("board POST register.......");
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/board/register";
         }
 
         log.info(boardDTO);
 
-        Long bno  = boardService.register(boardDTO);
+        Long bno = boardService.register(boardDTO);
 
         redirectAttributes.addFlashAttribute("result", bno);
 
@@ -72,10 +84,9 @@ public class BoardController {
     }
 
 
-
-
+    @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
     @GetMapping({"/read", "/modify"})
-    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
+    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
 
         BoardDTO boardDTO = boardService.readOne(bno);
 
@@ -85,24 +96,26 @@ public class BoardController {
 
     }
 
+
+    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/modify")
-    public String modify( PageRequestDTO pageRequestDTO,
-        @Valid BoardDTO boardDTO,
-        BindingResult bindingResult,
-        RedirectAttributes redirectAttributes){
+    public String modify(@Valid BoardDTO boardDTO,
+                         BindingResult bindingResult,
+                         PageRequestDTO pageRequestDTO,
+                         RedirectAttributes redirectAttributes) {
 
         log.info("board modify post......." + boardDTO);
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
 
             String link = pageRequestDTO.getLink();
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 
             redirectAttributes.addAttribute("bno", boardDTO.getBno());
 
-            return "redirect:/board/modify?"+link;
+            return "redirect:/board/modify?" + link;
         }
 
         boardService.modify(boardDTO);
@@ -114,39 +127,53 @@ public class BoardController {
         return "redirect:/board/read";
     }
 
-    @PostMapping(value = "/thumb", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void thumb(@RequestBody  BoardDTO bno, RedirectAttributes redirectAttributes){
 
-
-
-        log.info(bno);
-
-        Long num = bno.getBno();
-
-         boardService.thumbsup(num);
-
-        redirectAttributes.addFlashAttribute("result", "thumb up");
-
-        Map<String, Integer> resultMap = new HashMap<>();
-
-        resultMap.put("bno", 1);
-
-//        return resultMap;
-    }
-
-
-
+    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/remove")
-    public String remove(Long bno, RedirectAttributes redirectAttributes) {
+    public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
 
+        Long bno = boardDTO.getBno();
         log.info("remove post.. " + bno);
 
         boardService.remove(bno);
+
+        //게시물이 삭제되었다면 첨부 파일 삭제
+        log.info(boardDTO.getFileNames());
+        List<String> fileNames = boardDTO.getFileNames();
+        if (fileNames != null && fileNames.size() > 0) {
+            removeFiles(fileNames);
+        }
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/board/list";
 
+    }
+
+
+    public void removeFiles(List<String> files) {
+
+        for (String fileName : files) {
+
+            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+            String resourceName = resource.getFilename();
+
+
+            try {
+                String contentType = Files.probeContentType(resource.getFile().toPath());
+                resource.getFile().delete();
+
+                //섬네일이 존재한다면
+                if (contentType.startsWith("image")) {
+                    File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
+                    thumbnailFile.delete();
+                }
+
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+
+        }//end for
     }
 
 

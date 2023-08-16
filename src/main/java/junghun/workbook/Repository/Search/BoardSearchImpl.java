@@ -109,7 +109,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         }
         query.where(board.bno.gt(0l));
 
-
+        // Projections.bean는 jpql 의 결과를 바로 dto로 처리할 수 있는 기능을 제공
         JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(
             Projections.bean(BoardListReplyCountDTO.class, board.bno, board.title, board.writer,
                 board.regDate, reply.count().as("replyCount")));
@@ -156,7 +156,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
         JPQLQuery<BoardListReplyLikeCountDTO> dtoQuery = query.select(
             Projections.bean(BoardListReplyLikeCountDTO.class, board.bno, board.title, board.writer,
-                board.regDate,board.thumb , reply.count().as("replyCount")));
+                board.regDate, reply.count().as("replyCount")));
 
         this.getQuerydsl().applyPagination(pageable, dtoQuery);
 

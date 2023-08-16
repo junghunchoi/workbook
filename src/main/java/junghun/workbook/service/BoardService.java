@@ -21,7 +21,7 @@ public interface BoardService {
 
     void remove(Long bno);
 
-    Long thumbsup(Long bno);
+//    Long thumbsup(Long bno);
 
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 
@@ -39,7 +39,6 @@ public interface BoardService {
                            .title(boardDTO.getTitle())
                            .content(boardDTO.getContent())
                            .writer(boardDTO.getWriter())
-
                            .build();
 
         if(boardDTO.getFileNames() != null){

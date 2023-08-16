@@ -12,6 +12,5 @@ public class BoardListReplyLikeCountDTO {
     private LocalDateTime regDate;
 
     private Long replyCount;
-    private Long thumb;
 
 }

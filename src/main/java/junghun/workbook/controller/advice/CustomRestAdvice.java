@@ -17,6 +17,11 @@ import org.springframework.validation.*;
 @Log4j2
 public class CustomRestAdvice {
 
+    /*
+        rest방식의 컨트롤러는 어디서 문제가 발생하는지 알 수 없다.
+        따라서 @Valid 과정에서 문제가 발생하면 처리할 수 있도록 @RestControllerAdvice 를 설계한다.
+     */
+
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     public ResponseEntity<Map<String, String>> handleBindException(BindException e) {
