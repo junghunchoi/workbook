@@ -7,6 +7,7 @@ import com.querydsl.jpa.JPQLQuery;
 import junghun.workbook.dto.BoardImageDTO;
 import junghun.workbook.dto.BoardListAllDTO;
 import junghun.workbook.dto.BoardListReplyCountDTO;
+import junghun.workbook.dto.BoardListReplyLikeCountDTO;
 import junghun.workbook.entity.Board;
 import junghun.workbook.entity.QBoard;
 import junghun.workbook.entity.QReply;
@@ -53,6 +54,8 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 //
 //		return null;
 //	}
+
+
 
 	//	@Override
 //	public Page<Board> searchAll(String[] types, String keyword, Pageable pageable) {
@@ -141,6 +144,11 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 		Long count = dtoQuery.fetchCount();
 
 		return new PageImpl<>(dtoList, pageable, count); // 댓글, 페이지를 처리하는 내장함수
+	}
+
+	@Override
+	public Page<BoardListReplyLikeCountDTO> searchWithReplyLikeCount(String[] types, String keyword, Pageable pageable) {
+		return null;
 	}
 
 	@Override
