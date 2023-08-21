@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class BoardListReplyCountDTO {
+public class BoardListReplyLikeCountDTO {
+
     private Long Bno;
     private String title;
     private String writer;

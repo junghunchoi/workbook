@@ -1,14 +1,16 @@
 package junghun.workbook.dto;
 
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bytebuddy.asm.Advice.Local;
 
 @Data
 @Builder
@@ -19,7 +21,7 @@ public class BoardDTO {
     private Long bno;
 
     @NotEmpty
-    @Size(min=3, max = 100)
+    @Size(min = 3, max = 100)
     private String title;
 
     @NotEmpty
@@ -27,10 +29,13 @@ public class BoardDTO {
 
     @NotEmpty
     private String writer;
+
+    private Long thumb;
+
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 
-    //첨부파일의 이름들
     private List<String> fileNames;
+
 
 }

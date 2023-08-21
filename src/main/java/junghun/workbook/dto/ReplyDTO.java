@@ -1,20 +1,22 @@
 package junghun.workbook.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ReplyDTO {
 
     private Long rno;
@@ -28,10 +30,11 @@ public class ReplyDTO {
     @NotEmpty
     private String replyer;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss") // 해당 형식으로 JSON 포멧
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
-    @JsonIgnore // 수정시간은 화면에 보일 필요가 없으므로 JSON으로 변환할 때 무시
+    @JsonIgnore
     private LocalDateTime modDate;
+
 
 }

@@ -25,12 +25,13 @@ public class BoardImage implements Comparable<BoardImage> {// @onetomany  처리
     private Board board;
 
 
-    // 부모의 상태에 따라 변화해야하므로 아래와 같이 설정한다.
+
     @Override
     public int compareTo(BoardImage other) {
         return this.ord - other.ord;
     }
 
+    // 부모의 상태에 따라 변화해야하므로 아래와 같이 설정한다.
     public void changeBoard(Board board){
         this.board = board;
     }

@@ -3,10 +3,10 @@ package junghun.workbook.service;
 import junghun.workbook.dto.PageRequestDTO;
 import junghun.workbook.dto.PageResponseDTO;
 import junghun.workbook.dto.ReplyDTO;
-import junghun.workbook.entity.Reply;
 
 public interface ReplyService {
-    Long register(ReplyDTO replyDTO);
+
+    Long Register(ReplyDTO replyDTO);
 
     ReplyDTO read(Long rno);
 

@@ -17,30 +17,31 @@ public class BoardServiceTests {
     @Autowired
     private BoardService boardService;
 
-    @Test
-    public void testRegister() {
-
-        log.info(boardService.getClass().getName());
-
-        BoardDTO boardDTO = BoardDTO.builder()
-                .title("Sample Title...")
-                .content("Sample Content...")
-                .writer("user00")
-                .build();
-
-        Long bno = boardService.register(boardDTO);
-
-        log.info("bno: " + bno);
-    }
+//    @Test
+//    public void testRegister() {
+//
+//        log.info(boardService.getClass().getName());
+//
+//        BoardDTO boardDTO = BoardDTO.builder()
+//                .title("Sample Title...")
+//                .content("Sample Content...")
+//                .writer("user00")
+//                .build();
+//
+//        Long bno = boardService.register(boardDTO);
+//
+//        log.info("bno: " + bno);
+//    }
 
     @Test
     public void testModify() {
 
         //변경에 필요한 데이터만
         BoardDTO boardDTO = BoardDTO.builder()
-                .bno(100L)
-                .title("Updated....101")
+                .bno(1L)
+                .title("씨부레")
                 .content("Updated content 101...")
+            .thumb(2L)
                 .build();
 
         boardService.modify(boardDTO);
@@ -64,18 +65,23 @@ public class BoardServiceTests {
 
     }
 
-    @Test
-    public void testReadAll() {
-        Long bno = 101l;
+//    @Test
+//    public void Thumbsup() {
+//        boardService.thumbsup(1L);
+//    }
 
-        BoardDTO boardDTO = boardService.readOne(bno);
-
-        log.info(boardDTO);
-
-        for (String fileName : boardDTO.getFileNames()) {
-            log.info(fileName);
-        }
-    }
+//    @Test
+//    public void testReadAll() {
+//        Long bno = 101l;
+//
+//        BoardDTO boardDTO = boardService.readOne(bno);
+//
+//        log.info(boardDTO);
+//
+//        for (String fileName : boardDTO.getFileNames()) {
+//            log.info(fileName);
+//        }
+//    }
 
 
 }

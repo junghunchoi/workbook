@@ -21,8 +21,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "board")
-//@ToString
+@ToString(exclude = "board") // 필요할 때까지 board를 호출하지 않는다. 자원을 아끼기 위한 방법.
 public class Reply extends BaseEntity {
 
     @Id
