@@ -39,6 +39,7 @@ public class ReplyController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Long> register(@Valid @RequestBody ReplyDTO replyDTO, BindingResult bindingResult) throws BindException {
 
+        log.info("replyDTO -> " + replyDTO);
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -56,6 +57,7 @@ public class ReplyController {
     public PageResponseDTO<ReplyDTO> getList(@PathVariable("bno") Long bno, PageRequestDTO pageRequestDTO    ) {
         PageResponseDTO<ReplyDTO> requestDTO = replyService.getListOfBoard(bno, pageRequestDTO);
 
+        log.info("requestDTO -> " + requestDTO.toString());
         return requestDTO;
 
     }

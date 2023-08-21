@@ -21,10 +21,6 @@ public interface BoardService {
 
     void remove(Long bno);
 
-//    Long thumbsup(Long bno);
-
-    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
-
     PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
     PageResponseDTO<BoardListReplyLikeCountDTO> listWithReplyLikeCount(PageRequestDTO pageRequestDTO);
@@ -32,6 +28,8 @@ public interface BoardService {
     //게시글의 이미지와 댓글의 숫자까지 처리
     PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO);
 
+
+    //다양한 처리를 하기 위해선 entity로 처리하는것이 좋다.
     default Board dtoToEntity(BoardDTO boardDTO){
 
         Board board = Board.builder()
@@ -50,6 +48,7 @@ public interface BoardService {
         return board;
     }
 
+    //board 엔티티 객체를 boarddto로 변환처리
     default BoardDTO entityToDTO(Board board) {
 
         BoardDTO boardDTO = BoardDTO.builder()

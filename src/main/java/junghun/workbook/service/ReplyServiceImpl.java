@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -31,12 +32,13 @@ public class ReplyServiceImpl implements ReplyService{
     public Long Register(ReplyDTO replyDTO) {
 
         Reply reply = modelMapper.map(replyDTO, Reply.class);
+        log.info("reply -> " + reply);
         Long rno = replyRepository.save(reply).getRno();
         return rno;
     }
 
     @Override
-    public ReplyDTO read(Long rno) {
+    public ReplyDTO read(@Param("rno") Long rno) {
 
         Optional<Reply> replyOptional = replyRepository.findById(rno);
 
@@ -66,23 +68,23 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     public PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO) {
 
-        Pageable pageable = PageRequest.of(
-            pageRequestDTO.getPage() < 10 ? 0 : pageRequestDTO.getPage() - 1,
-            pageRequestDTO.getSize(), Sort.by("rno").ascending());
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() <=0? 0: pageRequestDTO.getPage() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("rno").ascending());
 
         Page<Reply> result = replyRepository.listOfBoard(bno, pageable);
 
-        List<ReplyDTO> dtoList = result.getContent()
-                                       .stream()
-                                       .map(reply -> modelMapper.map(reply, ReplyDTO.class)).collect(
-                Collectors.toList());
+        List<ReplyDTO> dtoList =
+                result.getContent().stream().map(reply -> modelMapper.map(reply, ReplyDTO.class))
+                        .collect(Collectors.toList());
 
         return PageResponseDTO.<ReplyDTO>withAll()
-                              .pageRequestDTO(pageRequestDTO)
-                              .dtoList(dtoList)
-                              .total((int) result.getTotalElements())
-                              .build();
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
+
 
 
 }

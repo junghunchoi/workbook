@@ -18,6 +18,7 @@ async function getList({bno, page, size, goLast}){
 
     const result = await axios.get(`/replies/list/${bno}`, {params: {page, size}})
 
+    console.log(result)
     if(goLast){
         const total = result.data.total
         const lastPage = parseInt(Math.ceil(total/size))

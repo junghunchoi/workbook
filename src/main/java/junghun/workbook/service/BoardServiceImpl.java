@@ -98,28 +98,6 @@ public class BoardServiceImpl implements BoardService {
 //    }
 
     @Override
-    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
-
-        String[] types = pageRequestDTO.getTypes();
-        String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("bno");
-
-        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
-
-
-        // list로 리턴하는 방법.
-        List<BoardDTO> dtoList = result.getContent().stream()
-            .map(board -> modelMapper.map(board, BoardDTO.class)).collect(
-                Collectors.toList());
-
-        return PageResponseDTO.<BoardDTO>withAll()
-            .pageRequestDTO(pageRequestDTO)
-            .dtoList(dtoList)
-            .total((int)result.getTotalElements())
-            .build();
-    }
-
-    @Override
     public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(
         PageRequestDTO pageRequestDTO) {
 
@@ -158,6 +136,18 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
-        return null;
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListAllDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
     }
+
+
 }
