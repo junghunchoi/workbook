@@ -83,7 +83,7 @@
             </div>
         </div>
 
-
+        <!--begin modal-->
         <div class="modal registerModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -186,6 +186,7 @@
     }
 
 
+    //axios 결과를 printList, printPages 함수를 다시 호출하여 작업을 진행한다.
     function printReplies(page,size,goLast){
 
         getList({bno, page,size, goLast}).then(
@@ -325,7 +326,7 @@
 
         removeReply(replyHeader.innerHTML).then(result => {
 
-            alert(result.rno +' 댓글이 삭제되었습니다.')
+            alert('댓글이 삭제되었습니다.')
             replyText.value = ''
             modifyModal.hide()
 

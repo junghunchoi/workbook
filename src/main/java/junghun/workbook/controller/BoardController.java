@@ -90,8 +90,6 @@ public class BoardController {
 
         BoardDTO boardDTO = boardService.readOne(bno);
 
-        log.info("이미지포함 boarddto : " + boardDTO);
-
         model.addAttribute("dto", boardDTO);
 
     }

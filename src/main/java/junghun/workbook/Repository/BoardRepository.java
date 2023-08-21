@@ -16,7 +16,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardSearch
     String getTime();
 
 
-    @EntityGraph(attributePaths = {"imageSet"})// board를 조회한후 image를 다시 select 하기때문에 이 어노테이션으로 한 세션에 한번에 조회할 수 있도록 함
+    @EntityGraph(attributePaths = {"imageSet"})// board를 조회한후 image를 다시 select 하기때문에 이 어노테이션으로 한 세션에 한번에 조회할 수 있도록 함, 지연 로딩의 단점을 상쇄시킬 수 있음.
     @Query("select b from Board b where b.bno =:bno")
     Optional<Board> findByIdWithImages(@Param("bno") Long bno);
 

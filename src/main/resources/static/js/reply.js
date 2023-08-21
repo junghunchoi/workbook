@@ -2,8 +2,6 @@ async function get1(bno) {
 
     const result = await axios.get(`/replies/list/${bno}`)
 
-    //console.log(result)
-
     return result;
 }
 
@@ -39,6 +37,7 @@ async function addReply(replyObj) {
 
 async function getReply(rno) {
     const response = await axios.get(`/replies/${rno}`)
+    console.log(response)
     return response.data
 }
 

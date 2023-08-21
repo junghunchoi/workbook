@@ -54,7 +54,7 @@ public class PageResponseDTO<E> {
         //데이터의 개수를 계산한 마지막 페이지 번호
         int last =  (int)(Math.ceil((total/(double)size)));
 
-        this.end =  end > last ? last: end;
+        this.end = Math.min(end, last);
 
         this.prev = this.start > 1;
 

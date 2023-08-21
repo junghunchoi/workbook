@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UploadResultDTO {
+	/*
+		업로드된 파일의 UUID 값, 파일이름, 이미지여부를 객체로 구성하고 getLink()를 통해서 첨부파일의 경로 처리하기 위한 클래스
+	 */
 
 	private String uuid;
 

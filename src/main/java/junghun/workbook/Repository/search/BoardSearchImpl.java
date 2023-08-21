@@ -54,7 +54,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 //		return null;
 //	}
 
-//	@Override
+	//	@Override
 //	public Page<Board> searchAll(String[] types, String keyword, Pageable pageable) {
 //
 //		QBoard board = QBoard.board;
@@ -152,7 +152,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
 		// 게시물 조회 후 바로 이미지를 조회하는 쿼리 실행
 		JPQLQuery<Board> boardJPQLQuery = from(board);
-		boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board)); // left join
+		boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board));
 
 		if ((types != null && types.length > 0) && keyword != null) {
 			BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -180,7 +180,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
 		List<BoardListAllDTO> dtoList = tupleList.stream().map(tuple -> {
 			Board board1 = (Board) tuple.get(board);
-			long replyCount = tuple.get(1, Long.class); // 이건 튜블의 첫번째 인덱스의 댓글갯수를 가져온다는건가?
+			long replyCount = tuple.get(1, Long.class);
 
 			BoardListAllDTO dto = BoardListAllDTO.builder()
 					.bno(board1.getBno())

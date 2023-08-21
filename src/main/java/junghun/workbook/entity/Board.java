@@ -38,7 +38,7 @@ public class Board extends BaseEntity{
 
 
     @OneToMany(mappedBy = "board",// 하나의 게시물에 여러개의 첨부파일이 붙을 수 있다는 소리
-        cascade = {CascadeType.ALL},
+        cascade = {CascadeType.ALL}, // cascade의 속성에 따라 상위 엔티티의 상태가 변경 될 때 하위 엔티티들이 어떻게 바꿀지 설정할 수 있음.
         fetch = FetchType.LAZY,
         orphanRemoval = true) // 기존의 첨부파일을 모두 삭제한 후 새로 추가한 첨부파일을 엎어친다.
     @Builder.Default
