@@ -42,7 +42,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardDTO readOne(Long bno) {
 
-        Optional<Board> result = boardRepository.findById(bno);
+        Optional<Board> result = boardRepository.findByIdWithImages(bno);
 
         Board board = result.orElseThrow();
 
@@ -113,25 +113,6 @@ public class BoardServiceImpl implements BoardService {
             .dtoList(result.getContent())
             .total((int)result.getTotalElements())
             .build();
-    }
-
-    @Override
-    public PageResponseDTO<BoardListReplyLikeCountDTO> listWithReplyLikeCount(
-        PageRequestDTO pageRequestDTO) {
-
-        String[] types = pageRequestDTO.getTypes();
-        String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("bno");
-
-        Page<BoardListReplyLikeCountDTO> result = boardRepository.searchWithReplyLikeCount(types,
-            keyword, pageable);
-
-
-        return PageResponseDTO.<BoardListReplyLikeCountDTO>withAll()
-                              .pageRequestDTO(pageRequestDTO)
-                              .dtoList(result.getContent())
-                              .total((int)result.getTotalElements())
-                              .build();
     }
 
     @Override
