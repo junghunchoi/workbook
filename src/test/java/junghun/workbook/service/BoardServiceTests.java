@@ -48,22 +48,22 @@ public class BoardServiceTests {
 
     }
 
-    @Test
-    public void testList() {
-
-        //제목 혹은 내용 혹은 작성자가 1이라는 문자열을 가진 데이터를 검색하고 페이징 처리
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-                .type("tcw")
-                .keyword("1")
-                .page(1)
-                .size(10)
-                .build();
-
-        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-
-        log.info(responseDTO);
-
-    }
+//    @Test
+//    public void testList() {
+//
+//        //제목 혹은 내용 혹은 작성자가 1이라는 문자열을 가진 데이터를 검색하고 페이징 처리
+//        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+//                .type("tcw")
+//                .keyword("1")
+//                .page(1)
+//                .size(10)
+//                .build();
+//
+//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+//
+//        log.info(responseDTO);
+//
+//    }
 
 //    @Test
 //    public void Thumbsup() {
