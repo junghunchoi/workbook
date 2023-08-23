@@ -79,24 +79,6 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.deleteById(bno);
     }
 
-//    @Override
-//    public Long thumbsup(Long bno) {
-//
-//
-//
-//        Optional<Board> result = boardRepository.findById(bno);
-//
-//
-//        Board board = result.orElseThrow();
-//
-//
-//
-//
-//        boardRepository.save(board);
-//
-//        return board.getThumb();
-//    }
-
     @Override
     public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(
         PageRequestDTO pageRequestDTO) {

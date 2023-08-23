@@ -35,7 +35,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">Images</span>
                             <div class="float-end uploadHidden">
-                                <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+                                <button type="button" class="btn btn-primary uploadFileBtn">ADD File</button>
                             </div>
                         </div>
 
@@ -163,12 +163,6 @@
 
 
     function removeFile(uuid,fileName, obj){
-
-        console.log(uuid)
-        console.log(fileName)
-
-        console.log(obj)
-
         const targetDiv = obj.closest(".card")
 
         removeFileToServer(uuid, fileName).then(data => {
@@ -195,6 +189,8 @@
         }
 
         target.innerHTML = str;
+
+        document.querySelector("form").submit();
 
         const formObj = document.querySelector("form");
 

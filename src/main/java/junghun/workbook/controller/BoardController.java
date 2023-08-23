@@ -68,7 +68,7 @@ public class BoardController {
         log.info("board POST register.......");
 
         if (bindingResult.hasErrors()) {
-            log.info("has errors.......");
+            log.info("게시물 등록 에러...");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/board/register";
         }
