@@ -37,23 +37,31 @@ public class UpDownController {
 	@ApiOperation(value = "Upload POST", notes = "POST 방식으로 파일 등록")
 	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public List<UploadResultDTO> upload(UploadFileDTO uploadFileDTO) {
+		log.info(uploadFileDTO);
+
 		if (uploadFileDTO.getFiles() != null) {
+
 			final List<UploadResultDTO> list = new ArrayList<>();
+
 			uploadFileDTO.getFiles().forEach(multipartFile -> {
+
 				String originalName = multipartFile.getOriginalFilename();
+				log.info(originalName);
+
 				String uuid = UUID.randomUUID().toString();
 				Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
 				boolean image = false;
 
 				try {
-					multipartFile.transferTo(savePath); // 실제 파일 저장
+					multipartFile.transferTo(savePath);
+
 					//이미지 파일의 종류라면
-					//용량이 작은 이미지 파일을 하나 생성하여 나중에 사용할 수 있또록함.
 					if (Files.probeContentType(savePath).startsWith("image")) {
 						image = true;
 						File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
 						Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
 					}
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
