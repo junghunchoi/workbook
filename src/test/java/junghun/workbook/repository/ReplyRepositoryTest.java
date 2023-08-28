@@ -31,17 +31,22 @@ public class ReplyRepositoryTest {
     public void testInsert() {
 
         //실제 DB에 있는 bno
-        Long bno  = 4L;
+        Long bno  = 110L;
 
         Board board = Board.builder().bno(bno).build();
 
-        Reply reply = Reply.builder()
-                .board(board)
-                .replyText("댓글.....")
-                .replyer("replyer1")
-                .build();
+        for (int i = 110; i < 120; i++) {
 
-        replyRepository.save(reply);
+            Reply reply = Reply.builder()
+                    .board(board)
+                    .replyText("댓글.....")
+                    .replyer("replyer"+i)
+                    .build();
+
+            replyRepository.save(reply);
+
+        }
+
 
     }
 

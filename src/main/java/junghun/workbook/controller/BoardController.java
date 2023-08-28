@@ -84,7 +84,7 @@ public class BoardController {
     }
 
 
-//    @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
+    @PreAuthorize("isAuthenticated()")// 로그인한 사용자만 게시글을 읽을 수 있다.
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
 
@@ -95,7 +95,7 @@ public class BoardController {
     }
 
 
-//    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
+    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/modify")
     public String modify(@Valid BoardDTO boardDTO,
                          BindingResult bindingResult,
@@ -124,7 +124,7 @@ public class BoardController {
     }
 
 
-//    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
+    @PreAuthorize("principal.username == #boardDTO.writer") // 현재 로그인한 사용자와 작성자 정보가 일치할 때 수정가능.
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
 
