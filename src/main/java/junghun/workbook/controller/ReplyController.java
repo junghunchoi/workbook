@@ -39,7 +39,6 @@ public class ReplyController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Long> register(@Valid @RequestBody ReplyDTO replyDTO, BindingResult bindingResult) throws BindException {
 
-        log.info("replyDTO -> " + replyDTO);
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }

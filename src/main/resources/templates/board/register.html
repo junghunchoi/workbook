@@ -18,17 +18,17 @@
                 <div class="card-body">
                     <form action="/board/register" method="post">
                         <div class="input-group mb-3">
-                            <span class="input-group-text">Title</span>
+                            <span class="input-group-text">제목</span>
                             <input type="text" name="title" class="form-control" placeholder="Title">
                         </div>
 
                         <div class="input-group mb-3">
-                            <span class="input-group-text">Content</span>
+                            <span class="input-group-text">내용</span>
                             <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
                         </div>
 
                         <div class="input-group mb-3">
-                            <span class="input-group-text">Writer</span>
+                            <span class="input-group-text">작성자</span>
                             <input type="text" name="writer" class="form-control" placeholder="Writer"
                             th:value="${#authentication.principal.username}" readonly>
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Simple Sidebar - Login</title>
+    <title>로그인</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -17,14 +17,14 @@
 
     <div class="card align-self-center">
         <div class="card-header">
-            LOGIN Page
+            로그인
         </div>
         <div class="card-body">
             <th:block th:if="${param.logout != null}">
                 <h1>로그인이 되어있는 상태입니다.</h1>
             </th:block>
 
-            <form id="registerForm" action="/member/login" method="post"> <!-- action의 속성은 동일한 경로인 /member/login과 post로 설정-->
+            <form id="registerForm" action="/member/login" method="post" th:if="${param.logout== null}"> <!-- action의 속성은 동일한 경로인 /member/login과 post로 설정-->
                 <div class="input-group mb-3">
                     <span class="input-group-text">아이디</span>
                     <input type="text" name="username" class="form-control" placeholder="USER ID">

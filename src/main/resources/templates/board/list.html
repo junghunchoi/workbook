@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}">
+<head>
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
 
 <div layout:fragment="content">
 
@@ -36,18 +39,17 @@
 
             <div class="card">
                 <div class="card-header">
-                    Board List
                 </div>
                 <div class="card-body" >
-                    <h5 class="card-title">Board List </h5>
+                    <h5 class="card-title">게시물 </h5>
 
                     <table class="table">
                         <thead>
                         <tr>
                             <th scope="col">Bno</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Writer</th>
-                            <th scope="col">RegDate</th>
+                            <th scope="col">제목</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">등록일</th>
                         </tr>
                         </thead>
 
@@ -56,8 +58,8 @@
                         <tr th:each="dto:${responseDTO.dtoList}"  >
                             <th scope="row">[[${dto.bno}]]</th>
                             <td>
-                                <a th:href="|@{/board/read(bno =${dto.bno})}&${link}|"> [[${dto.title}]] </a>
-                                <span class="progress-bar-striped"  style="background-color: #0a53be">[[${dto.replyCount}]]</span>
+                                <a style=" color: black; text-decoration: none;" th:href="|@{/board/read(bno =${dto.bno})}&${link}|"> [[${dto.title}]] </a>
+                                <span class="progress-bar-striped"  style="background-color: gray">[[${dto.replyCount}]]</span>
                                 <div th:if="${dto.boardImages != null && dto.boardImages.size() > 0}">
                                     <img style="width:100px" th:each="boarImage: ${dto.boardImages}" th:src="|/view/s_${boarImage.uuid}_${boarImage.fileName}|">
                                 </div>
@@ -82,7 +84,7 @@
                             </th:block>
 
                             <li class="page-item" th:if="${responseDTO.next}">
-                                <a class="page-link"  th:data-num="${responseDTO.end + 1}">Next</a>
+                                <a class="page-link"  th:data-num="${responseDTO.end + 1}">다음</a>
                             </li>
                         </ul>
                     </div>
